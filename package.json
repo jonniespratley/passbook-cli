@@ -1,0 +1,29 @@
+{
+  "name": "jps-passbook-cli",
+  "version": "0.0.1",
+  "description": "A commander CLI app",
+  "private": true,
+  "bin": {
+    "jps-passbook-cli": "./bin/jps-passbook-cli"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "author": {
+    "name": "Jonnie Spratley",
+    "email": "jonniespratley@gmail.com",
+    "url": "https://github.com/jonniespratley/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonniespratley//jps-passbook-cli"
+  },
+  "license": "MIT",
+  "bugs": "https://github.com/jonniespratley//jps-passbook-cli/issues",
+  "dependencies": {
+    "commander": "~2.0.0",
+    "autocmdr": "~0.0.7"
+  },
+  "devDependencies": {
+  }
+}
