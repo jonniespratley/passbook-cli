@@ -1,5 +1,5 @@
 {
-  "name": "jps-passbook-cli",
+  "name": "passbook-cli",
   "version": "0.0.1",
   "description": "A commander CLI app",
   "private": true,
@@ -10,8 +10,8 @@
     "test": "mocha -R spec"
   },
   "author": {
-    "name": "Jonnie Spratley",
     "email": "jonniespratley@gmail.com",
+    "name": "Jonnie Spratley",
     "url": "https://github.com/jonniespratley/"
   },
   "repository": {
@@ -21,9 +21,18 @@
   "license": "MIT",
   "bugs": "https://github.com/jonniespratley//jps-passbook-cli/issues",
   "dependencies": {
+    "async": "^2.0.1",
+    "autocmdr": "~0.0.7",
     "commander": "~2.0.0",
-    "autocmdr": "~0.0.7"
+    "debug": "^2.2.0",
+    "fs-extra": "^0.30.0",
+    "glob": "^7.1.0",
+    "lodash": "^4.16.1",
+    "mocha": "^3.0.2",
+    "node-zip": "^1.1.1",
+    "npmlog": "^4.0.0",
+    "pem": "^1.8.3",
+    "pshell": "^1.0.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

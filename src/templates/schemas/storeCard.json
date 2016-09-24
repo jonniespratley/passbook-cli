@@ -1,0 +1,35 @@
+{
+	"storeCard": {
+		"primaryFields": [
+			{
+				"key": "blank1",
+				"label": "",
+				"value": ""
+			}
+		],
+		"auxiliaryFields": [
+			{
+				"key": "blank2",
+				"label": "Arden Fair",
+				"value": ""
+			}
+		],
+		"backFields": [
+			{
+				"key": "people",
+				"label": "Our People",
+				"value": "At Apple our most important resource, our soul, is our people.\n\nWe value dynamic, intelligent and interesting people who are passionate about Apple.\n\nWe offer a stimulating work environment, designed to create unparalleled career experiences and develop lifelong skills.\n\nWe value innovation and an environment that embraces change.\n\nWe celebrate our diversity, unique talents, and passion to strengthen the brand globally.\n\nWe are a community where great relationships, open communication , learning, leading, and growing serve to enrich our lives daily."
+			},
+			{
+				"key": "customer",
+				"label": "Our Customer",
+				"value": "Our stores are designed to create owners of Apple products and build loyalty.\n\nWe cultivate the customers relationship with Apple through every interaction.  We say hello with a product introduction, we engage through a purchase, and we deepen and restore relationships through our face-to-face services.\n\nWe passionately engage customers, showcase our technology, and help them discover how our products can enrich their lives.\n\nWe strive to inspire customers with every visit so that our stores are a happy place to shop, to learn, to create, to get help, and to want to visit over and over again.\n\nWe are at our best when we deliver enriching experiences that help owners of our products get more out of our technology and out of themselves."
+			},
+			{
+				"key": "daily",
+				"label": "Our Daily Commitment",
+				"value": "We utilize Apple Steps of Service to guide every interaction with our customers. \n\nWe engage our customers, making it easy to test-drive and learn how to use our products.\n\nWe are always up to date on Apples technology and integrate it wherever possible.\n\nWe earn our customers trust by recommending solutions that are relevant to their homes, their schools, and their businesses.\n\nWe exceed customers expectations, delivering all Genius Bar, Personal Training and workshop appointments in a timely, personalized, and efficient manner.\n\nWe embrace our One to One program as our primary strategy to help members get set up, get trained, and get going.\n\nWe build community through exciting programs for all customers through special events, hands-on workshops, and customized programs for Youth, Educators, Businesses, and our New to Mac buyers.\n\nWe utilize Net Promoter to monitor the employee and customer experience and to identify and address areas where we can better serve.\n\nWe encourage open dialogue with our people and customers to share ideas about improving our stores, our processes, and our performance.\n\nWe value each customer problem as an opportunity to shine.  \n\nWe listen and respond immediately to all feedback, taking personal initiative to make it right.\n\nWe maintain neat, clean, and organized stores in accordance with our visual standards.\n\nWe embrace and speak favorably of our coworkers, Apple Inc., our reseller channel, and third-party partners.\n\nWe value and strictly adhere to Apples confidentiality policies and brand guidelines. "
+			}
+		]
+	}
+}

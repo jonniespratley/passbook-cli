@@ -1,0 +1,54 @@
+{
+  "_id": "pass-jonniespratley",
+  "type": "github",
+  "generic": {
+    "headerFields": [{
+      "key": "headerfield",
+      "label": "Header Field",
+      "value": "Value"
+    }],
+
+    "primaryFields": [{
+      "key": "name",
+      "label": "Name",
+      "value": "Jonnie Spratley"
+    }],
+    "secondaryFields": [{
+      "key": "username",
+      "label": "Username"
+    }],
+    "auxiliaryFields": [{
+      "key": "user_following",
+      "label": "Following",
+      "value": 5
+    }, {
+      "label": "Followers",
+      "key": "user_followers",
+      "value": 32
+    }, {
+      "label": "Repos",
+      "key": "repos",
+      "value": 81
+    }, {
+      "label": "Gists",
+      "key": "gists",
+      "value": 7
+    }, {
+      "label": "Location",
+      "key": "location",
+      "value": "San Ramon, CA"
+    }, {
+      "label": "Blog",
+      "key": "blog",
+      "value": "http://jonniespratley.me"
+    }]
+  },
+  "description": "Jonnie Spratley Github",
+  "logoText": "Github",
+  "organizationName": "GE Digital",
+  "directory": "/Users/jps/Github/jps-passbook-manager/data/passes",
+  "filename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "rawFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.raw",
+  "pkpassFilename": "/Users/jps/Github/jps-passbook-manager/data/passes/pass-jonniespratley.pkpass",
+  "_key": "pass-jonniespratley"
+}
