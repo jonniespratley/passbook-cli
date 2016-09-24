@@ -1,18 +1,29 @@
-#jps-passbook-cli
+#passbook-cli
+
+[![Build Status](https://travis-ci.org/jonniespratley/passbook-cli.svg?branch=master)](https://travis-ci.org/jonniespratley/passbook-cli)
+
+
+
 
 ## Description
 
-A commander CLI app
+A command line tool that simplifies the process of creating certificates, signing `.raw` packages and validating `.pkpass` packages for Apple Wallet.
 
 ## Usage
 
-To install jps-passbook-cli from npm, run:
+To install passbook-cli from npm, run:
 
 ```
-$ npm install -g jps-passbook-cli
+$ npm install -g passbook-cli
 ```
 
-```node ./bin/jps-passbook-cli --help```
+```
+$ passbook-cli --help
+```
+
+
+
+
 
 ## License
 
