@@ -22,7 +22,29 @@ $ passbook-cli --help
 ```
 
 
+## CLI
 
+
+```
+
+ 645  passbook-cli create-pems --input=./src/certificates/pass.io.passbookmanager.test.p12 --passphrase=test --output=./temp
+ 690  passbook-cli create-pass --type=coupon --output=./temp/pass.raw
+```
+
+
+
+
+
+
+
+
+
+## eventTicket
+```
+
+export PASS_TYPE_IDENTIFIER=pass.io.passbookmanager.test
+ 718  export TEAM_IDENTIFIER=USE9YUYDFH
+```
 
 
 ## License

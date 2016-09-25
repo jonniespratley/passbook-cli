@@ -6,7 +6,9 @@ const assert = require('assert');
 const utils = require('../src/utils');
 const tempDir = path.resolve(__dirname, './temp');
 const pem = require('pem');
-const config = require('./test-config')
+const config = require('./test-config');
+
+
 describe('Utils', () => {
   it('getLogger - returns log instance', (done) => {
     var logger = utils.getLogger('test');
@@ -18,7 +20,7 @@ describe('Utils', () => {
   it('checksum - returns checksum', (done) => {
     var str = utils.checksum('test');
     assert(str);
-    console.log(str);
+    //  console.log(str);
     done();
   });
 
@@ -49,10 +51,12 @@ describe('Utils', () => {
       done();
     });
 
-    it('createPkcs12Files - runs command and files', (done) => {
-      utils.createPkcs12Files(config.certs.p12, config.certs.passphrase, tempDir).then((res) => {
+    it('createPemFiles - runs command and files', (done) => {
+      utils.createPemFiles(config.certs.p12, config.certs.passphrase, tempDir).then((res) => {
         assert(res);
         done();
+      }).catch((err) => {
+        done(err);
       });
     });
 
@@ -74,10 +78,10 @@ describe('Utils', () => {
 
   });
 
-  it('copyPassAssets - should copy files to dest and resolve', (done) => {
-    utils.copyPassAssets('generic', `${tempDir}/test-pass.raw`).then((resp) => {
+  it('createPassAssets - should copy files to dest and resolve', (done) => {
+    utils.createPassAssets('test-pass', 'generic', `${tempDir}`).then((resp) => {
       assert(resp);
-      console.log('resp', resp);
+      //  console.log('resp', resp);
       done();
     });
   });
@@ -91,7 +95,7 @@ describe('Utils', () => {
         clientKeyPassword: config.certs.passphrase,
         p12Password: config.certs.passphrase
       };
-      console.log('pem', p12Path);
+      //console.log('pem', p12Path);
       pem.readPkcs12(p12Path, options, (resp) => {
         console.log(resp);
         done();

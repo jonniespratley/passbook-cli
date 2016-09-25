@@ -522,6 +522,10 @@ SignPass.createPemsPromise = function(options) {
   });
 };
 
+/**
+ * Validate the contents of a .pkpass package.
+ * @param {String} pkpassFilename The filename of the pass.
+ */
 SignPass.validate = function(pkpassFilename) {
   assert(pkpassFilename, 'has pkpass filename');
   let bin = path.resolve(__dirname, './bin/signpass');
@@ -534,7 +538,6 @@ SignPass.validate = function(pkpassFilename) {
       }
     }).then((resp) => {
       log.info('resp', resp);
-
       if (regex.test(resp.stdout)) {
         log.error('err', resp);
         reject(new Error(resp.stdout));

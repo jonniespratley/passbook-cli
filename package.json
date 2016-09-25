@@ -1,25 +1,24 @@
 {
   "name": "passbook-cli",
   "version": "0.0.1",
-  "description": "A commander CLI app",
-  "private": true,
+  "description": "A command line tool that simplifies the process of creating certificates, signing .raw packages and validating .pkpass packages for Apple Wallet.",
   "bin": {
-    "jps-passbook-cli": "./bin/jps-passbook-cli"
+    "passbook-cli": "./bin/passbook-cli"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "gulp"
   },
   "author": {
     "email": "jonniespratley@gmail.com",
     "name": "Jonnie Spratley",
-    "url": "https://github.com/jonniespratley/"
+    "url": "https://github.com/jonniespratley"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonniespratley//jps-passbook-cli"
+    "url": "https://github.com/jonniespratley/passbook-cli"
   },
   "license": "MIT",
-  "bugs": "https://github.com/jonniespratley//jps-passbook-cli/issues",
+  "bugs": "https://github.com/jonniespratley/passbook-cli/issues",
   "dependencies": {
     "async": "^2.0.1",
     "autocmdr": "~0.0.7",
@@ -27,12 +26,28 @@
     "debug": "^2.2.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.1.0",
+    "js-yaml": "^3.6.1",
     "lodash": "^4.16.1",
+    "log-symbols": "^1.0.2",
     "mocha": "^3.0.2",
     "node-zip": "^1.1.1",
     "npmlog": "^4.0.0",
     "pem": "^1.8.3",
     "pshell": "^1.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "gulp": "^3.9.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-istanbul": "^1.1.1",
+    "gulp-jsdoc3": "^0.3.0",
+    "gulp-jshint": "^2.0.1",
+    "gulp-load-plugins": "^1.3.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-sequence": "^0.4.6",
+    "gulp-spawn-mocha": "^3.1.0",
+    "gulp-util": "^3.0.2",
+    "mocha": "^2.1.0",
+    "mochawesome": "^1.5.2"
+  }
 }
