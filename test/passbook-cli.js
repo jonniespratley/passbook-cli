@@ -42,6 +42,7 @@ describe('passbook-cli bin', function() {
       done();
     });
   });
+
   describe('create-pems', () => {
     it('--help should run without errors', function(done) {
       exec(cmd + 'create-pems --help', function(error, stdout, stderr) {
@@ -50,6 +51,7 @@ describe('passbook-cli bin', function() {
       });
     });
   });
+
   describe('create-pass', () => {
     it('--help should run without errors', function(done) {
       exec(cmd + 'create-pass --help', function(error, stdout, stderr) {
