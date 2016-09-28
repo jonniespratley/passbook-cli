@@ -3,7 +3,8 @@
   "serialNumber": "8j23fm3",
   "webServiceURL": "https://example.com/passes/",
   "authenticationToken": "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
-  "passTypeIdentifier": "pass.passbookmanager.io",
+  "teamIdentifier": "12345",
+  "passTypeIdentifier": "pass.io.test",
   "locations": [
     {
       "longitude": -122.3748889,

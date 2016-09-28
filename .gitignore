@@ -3,3 +3,5 @@ npm-debug.log
 /temp/
 /mochawesome-reports/
 /coverage/
+test/temp
+store
