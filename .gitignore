@@ -3,6 +3,9 @@ npm-debug.log
 /temp/
 /mochawesome-reports/
 /coverage/
-test/temp
+test/temp/
 store
 .idea
+temp
+/src/certificates/pass.io.passbookmanager.test-cert.pem
+/src/certificates/pass.io.passbookmanager.test-key.pem
