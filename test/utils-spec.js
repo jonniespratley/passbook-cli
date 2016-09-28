@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const glob = require('glob');
 const _ = require('lodash');
 const path = require('path');
 const assert = require('assert');
@@ -30,7 +31,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('certificate utils', () => {
+  context('Certificates', () => {
     var cmds = [];
     it('getPkcs12CertCmd - returns filename and command', (done) => {
       var str = utils.getPkcs12CertCmd(config.certs.p12, 'test', tempDir);
@@ -47,9 +48,8 @@ describe('Utils', () => {
       done();
     });
 
-    it('createPemFiles - runs command and files', (done) => {
+    it('createPemFiles - create cert.pem, key.pem and resolve on success', (done) => {
       utils.createPemFiles(config.certs.p12, config.certs.passphrase, tempDir).then((res) => {
-        console.log(res);
         config.certs.cert = res.cert;
         config.certs.key = res.key;
         assert(res);
@@ -80,9 +80,9 @@ describe('Utils', () => {
   context('Passes', () => {
     it('createPassAssets - should create .raw pass files to dest and resolve', (done) => {
       utils.createPassAssets({
-        name: 'test-pass',
+        name: 'test-pass-1',
         type: 'generic',
-        dest: tempDir
+        output: './temp'
       }).then((resp) => {
         assert(resp);
         done();
@@ -94,18 +94,18 @@ describe('Utils', () => {
 
     it('createPassAssets - should create .raw pass files, extended with passes obj and resolve', (done) => {
       utils.createPassAssets({
-        name: 'test-pass',
+        name: 'test-pass-2',
         type: 'generic',
-        teamIdentifier: '12345',
-        passTypeIdentifier: 'pass.io.test',
-        output: tempDir
+        teamIdentifier: config.teamIdentifier,
+        passTypeIdentifier: config.passTypeIdentifier,
+        output: './temp'
       }).then((resp) => {
         let pass = JSON.parse(fs.readFileSync(`${resp}/pass.json`));
         rawpassFilename = resp;
         assert(resp);
         assert(fs.existsSync(resp));
-        assert(pass.teamIdentifier === '12345');
-        assert(pass.passTypeIdentifier === 'pass.io.test');
+        assert(pass.teamIdentifier === config.teamIdentifier);
+        assert(pass.passTypeIdentifier === config.passTypeIdentifier);
         done();
       }).catch((err) => {
         console.log('err', err);
@@ -114,10 +114,7 @@ describe('Utils', () => {
       });
     });
 
-    it('validatePkpass', (done) => {
-      done();
-    });
-    it('generateJsonManifest', (done) => {
+    it('generateJsonManifest - should generate a manifest.json of the .raw package and resolve on success', (done) => {
       utils.generateJsonManifest(rawpassFilename).then((resp) => {
         assert(resp);
         done();
@@ -126,8 +123,9 @@ describe('Utils', () => {
         done();
       });
     });
-    it('signJsonManifest', (done) => {
-      utils.generateJsonManifest(rawpassFilename, config.certs.cert.filename, config.certs.key.filename,
+
+    it('signJsonManifest - should sign a manifest.json of the .raw package and resolve on success', (done) => {
+      utils.signJsonManifest(rawpassFilename, config.certs.cert.filename, config.certs.key.filename,
         config.certs.passphrase).then((resp) => {
         assert(resp);
         done();
@@ -136,21 +134,64 @@ describe('Utils', () => {
         done();
       });
     });
-  });
 
-  describe('pem', () => {
-    it('readPkcs12 - should read cert', (done) => {
-      var p12Path = config.certs.p12;
-      var options = {
-        clientKeyPassword: config.certs.passphrase,
-        p12Password: config.certs.passphrase
-      };
-      //console.log('pem', p12Path);
-      pem.readPkcs12(p12Path, options, (resp) => {
+    it('compressRawDirectory - should create a .pkpass package, .zip package from a .raw package', (done) => {
+      utils.compressRawDirectory(rawpassFilename).then((resp) => {
+        assert(resp);
         console.log(resp);
+        done();
+      }).catch((err) => {
+        assert.fail(err);
         done();
       });
     });
-  });
 
+    it('createPkPass - should generateJsonManifest, signJsonManifest, and compressRawDirectory for each pass type', (done) => {
+      utils.createPkPass(rawpassFilename, config.certs.cert.filename, config.certs.key.filename, config.certs.passphrase).then((resp) => {
+        assert(resp);
+        done();
+      }).catch((err) => {
+        assert.fail(err);
+        done();
+      });
+    });
+
+
+    it('validatePkpass - should validate a .pkpass package and resolve on success', (done) => {
+      done();
+    });
+
+    context('Types', () => {
+      var passTypes = ['coupon', 'generic', 'eventTicket', 'storeCard'/*, 'boardingPass'*/];
+
+      passTypes.forEach((type) => {
+        it(`should create pass for ${type}`, (done) => {
+          var options = {
+            name: `test-${type}`,
+            type: type,
+            teamIdentifier: config.teamIdentifier,
+            passTypeIdentifier: config.passTypeIdentifier,
+            output: path.resolve(__dirname, './temp')
+          };
+          utils.createPassAssets(options).then((resp) => {
+              console.log(resp);
+              assert(fs.existsSync(resp));
+              utils.createPkPass(resp, config.certs.cert.filename, config.certs.key.filename, config.certs.passphrase).then((pkpass) => {
+                 console.log(pkpass);
+                assert(fs.existsSync(pkpass));
+                done();
+              }).catch((err) => {
+                assert.fail(err);
+                done();
+              });
+            })
+            .catch((err) => {
+              assert.fail(err);
+              done();
+            });
+        });
+      });
+    });
+
+  });
 });

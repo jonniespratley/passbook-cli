@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 const assert = require('assert');
 const async = require('async');
 const crypto = require('crypto');
@@ -13,7 +14,7 @@ const pkg = require(path.resolve(__dirname, '../package.json'));
 const log = require('npmlog');
 const logger = debug(`${pkg.name}:utils`);
 
-const zip = new require('node-zip')();
+
 const shell = require('pshell').context({
   echoCommand: false,
   ignoreError: false,
@@ -92,11 +93,11 @@ class Utils {
       passObj = Object.assign(passJson, passObj);
       if (passTypeIdentifier) {
         logger('using', passTypeIdentifier);
-        passJson.passTypeIdentifier = passTypeIdentifier;
+        passObj.passTypeIdentifier = passTypeIdentifier;
       }
       if (teamIdentifier) {
         logger('using', teamIdentifier);
-        passJson.teamIdentifier = teamIdentifier;
+        passObj.teamIdentifier = teamIdentifier;
       }
 
       //log.info('pass.json', passJson);
@@ -161,14 +162,33 @@ class Utils {
     };
   }
 
-  /**
-   * createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
-   *
-   * @param  {type} p12        The path to the .p12 cert
-   * @param  {type} passphrase The passphrase for the cert
-   * @param  {type} dest       The output destination (default is .p12 dir)
-   * @return {type}            description
-   */
+  forceCleanRawPass(rawpassFilename) {
+      return new Promise((resolve, reject) => {
+        let manifest = path.resolve(rawpassFilename, './manifest.json');
+        let signature = path.resolve(rawpassFilename, './signature');
+        let files = [
+          manifest,
+          signature
+        ];
+        let _done = _.after(files.length, () => {
+          resolve(rawpassFilename);
+        });
+        _.forEach(files, (file) => {
+          logger('force_clean_raw_pass', 'removing', path.basename(file));
+          fs.removeSync(file);
+          _done();
+
+        });
+      });
+    }
+    /**
+     * createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
+     *
+     * @param  {type} p12        The path to the .p12 cert
+     * @param  {type} passphrase The passphrase for the cert
+     * @param  {type} dest       The output destination (default is .p12 dir)
+     * @return {type}            description
+     */
   createPemFiles(p12, passphrase) {
 
     return new Promise((resolve, reject) => {
@@ -291,6 +311,113 @@ class Utils {
       }).catch((error) => {
         log.error('signJsonManifest', error);
         reject(error);
+      });
+    });
+  }
+
+  /**
+   * compressRawDirectory - Creates a .zip archive of a .raw pass package.
+   *
+   * @param  {String} rawpassFilename The path to the .raw package.
+   * @return {Object}                 The path to the .zip and .pkpass package.
+   */
+  compressRawDirectory(rawpassFilename) {
+    return new Promise((resolve, reject) => {
+      const zip = new require('node-zip')();
+      let zipFilename = rawpassFilename.replace('.raw', '.zip');
+      logger('compressRawDirectory', rawpassFilename);
+      fs.removeSync(zipFilename);
+      glob(path.resolve(rawpassFilename, './*'), (err, files) => {
+        if (err) {
+          reject(err);
+        }
+
+        let _done = _.after(files.length, () => {
+          let data = zip.generate({
+            base64: false,
+            compression: 'DEFLATE'
+          });
+          fs.writeFileSync(zipFilename, data, 'binary');
+          logger('compressRawDirectory', path.basename(zipFilename));
+          resolve(zipFilename);
+        });
+
+        _.forEach(files, (file) => {
+          logger('compress_pass_file', 'add', path.basename(file));
+          try {
+            zip.file(path.basename(file), fs.readFileSync(path.resolve(file)));
+            _done();
+          } catch (e) {
+            log.error('compressRawDirectory', e);
+            reject(e);
+          }
+        });
+      });
+    });
+  }
+
+  /**
+   * packageRawDirectory - Should take a .raw pass package, generate a manifest.json and signature of the .raw package contents, then
+   * create a .pkpass package that is ready to install on a device.
+   *
+   * @param  {String} rawpassFilename The path to the .raw pass package.
+   * @return {String}                 The path to the .pkpass package.
+   */
+  createPkPass(rawpassFilename, cert, key, passphrase) {
+    return new Promise((resolve, reject) => {
+      let pkpassFilename = rawpassFilename.replace('.raw', '.pkpass');
+
+      /*
+              async.waterfall([
+
+                      clean(cb) =>{
+                          log.info('clean');
+                          this.forceCleanRawPass(rawpassFilename).then((a) =>{
+                              cb(null, a);
+                          });
+                      },
+                      manifest(dir, cb) =>{
+                          log.info('manifest');
+                          this.generateJsonManifest(dir).then((b) =>{
+                              cb(null, b);
+                          });
+                      },
+                      signature(dir, cb) =>{
+                          log.info('signature');
+                          this.signJsonManifest(dir, cert, key, passphrase).then((signature) =>{
+                              cb(null, signature);
+                          });
+                      },
+                      compress (dir, cb) =>{
+                          log.info('compress');
+                          this.compressRawDirectory(dir).then((zipFilename)=>{
+                              cb(null, zipFilename);
+                          }).catch(reject);
+                      }
+
+              ], (err, results) =>{
+                  console.log(err, results);
+                  if(err){
+                      reject(err);
+                  }
+                  resolve(results);
+              });
+      */
+      this.forceCleanRawPass(rawpassFilename).then((a) => {
+
+
+        this.generateJsonManifest(rawpassFilename).then((manifest) => {
+          this.signJsonManifest(rawpassFilename, cert, key, passphrase).then((signature) => {
+            this.compressRawDirectory(rawpassFilename).then((zipFilename) => {
+              fs.copy(zipFilename, pkpassFilename, (err) => {
+                if (err) {
+                  reject(err);
+                }
+                resolve(pkpassFilename);
+              });
+            }).catch(reject);
+          }).catch(reject);
+        }).catch(reject);
       });
     });
   }
