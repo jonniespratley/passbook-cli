@@ -21,9 +21,15 @@ module.exports = (program) => {
 		.option('-t, --type <generic>', 'pass type (boardingPass, coupon, eventTicket, generic, storeCard)', 'generic')
 		.option('-o, --output <path>', 'path to output')
 		.action((args) => {
-			utils.createPassAssets(args.type, args.output, args.name).then((resp) => {
-				program.log.info(logSymbols.success, 'create-pass', args.name, args.type, resp);
-			});
+			utils.createPassAssets({
+                name: args.name,
+                type: args.type,
+                output: args.output
+            }).then((resp) => {
+				console.log(logSymbols.success, resp);
+			}).catch((err) =>{
+                program.log.error(logSymbols.error, 'create-pass', err);
+            });
 		});
 
 };

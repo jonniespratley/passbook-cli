@@ -4,10 +4,8 @@
 'use strict';
 const yaml = require('js-yaml');
 const utils = require('../src/utils');
-
-
+const logSymbols = require('log-symbols');
 module.exports = (program) => {
-
 	program
 		.command('create-pems')
 		.version('0.0.1')
@@ -15,25 +13,16 @@ module.exports = (program) => {
 		.option('-i, --input []', 'Path to .p12 file')
 		.option('-p, --passphrase []', 'Passphrase for .p12 file')
 		.option('-o, --output []', 'Path to key/cert output')
-
 	.action((args) => {
-
 		var p12 = args.input;
 		var passphrase = args.passphrase;
 		var output = args.output;
-
-		//	var str = utils.getPkcs12CertCmd(args.input, args.passphrase, args.output);
-		//console.log(str.cmd);
-		//console.log('Using', p12);
-
 		utils.createPemFiles(p12, passphrase, output).then((res) => {
 
-			res.forEach((f) => {
-				console.log('created', f.filename);
-			});
-
+			console.log(logSymbols.success, res.cert.filename);
+			console.log(logSymbols.success, res.key.filename);
 		}).catch((err) => {
-			//console.log(err);
+			program.log.error(err);
 		});
 
 		//	console.log(args);

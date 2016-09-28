@@ -16,7 +16,7 @@ const config = {
 
 const jsdoc = require('gulp-jsdoc3');
 gulp.task('docs', function(cb) {
-  gulp.src(['README.md', './src/**/*.js'], {
+  gulp.src(['README.md'].concat(config.src), {
       read: false
     })
     .pipe(jsdoc(cb));
@@ -38,13 +38,14 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function() {
+gulp.task('test', function() {
   return gulp.src(config.specs)
     .pipe(mocha({
       read: false,
+      istanbul: true,
       reporter: 'mochawesome'
     }))
-    .pipe(istanbul.writeReports())
+    //.pipe(istanbul.writeReports())
     .once('error', function() {
       process.exit(1);
     })
@@ -54,7 +55,7 @@ gulp.task('test', ['pre-test'], function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['src/**', 'test/**/*.js'], ['test']);
+  gulp.watch([config.src, 'test/**/*.js'], ['test']);
 });
 
 
