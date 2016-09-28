@@ -81,7 +81,7 @@ class Utils {
     return new Promise((resolve, reject) => {
       let name = obj.name;
       let passType = obj.type;
-      let dest = obj.dest;
+      let dest = obj.output;
       let passObj = obj.pass || {};
 
       let destDir = path.resolve(dest, `./${name}.raw/`);
@@ -123,40 +123,34 @@ class Utils {
    * @return {Object} cmd         the command and filename
    */
   getPkcs12CertCmd(p12, passphrase) {
-      let _path = path.parse(p12);
-      logger('getPkcs12CertCmd', p12);
-      _path.ext = '.pem';
-      _path.name += '-cert';
-      let _out = p12.replace('.p12', '-cert.pem');
-      let _cmd =
-        `openssl pkcs12 \
-      -in ${p12} \
-      -passin pass:${passphrase} \
-      -clcerts \
-      -nokeys \
-      -out ${_out}`;
-      logger('getPkcs12CertCmd', _cmd);
-      return {
-        filename: _out,
-        cmd: _cmd
-      };
-    }
-    /**
-     * getPkcs12KeyCmd - Creates the command needed to generate a key.pem
-     *
-     * @param  {String} p12           path to the .p12 cert
-     * @param  {String} passphrase    passphrase for .p12 key
-     * @return {Object} cmd           the command and filename
-     */
+    let _path = path.parse(p12);
+    logger('getPkcs12CertCmd', p12);
+    _path.ext = '.pem';
+    _path.name += '-cert';
+    p12 = path.resolve(p12);
+    let _out = p12.replace('.p12', '-cert.pem');
+    let _cmd = `openssl pkcs12 -in ${p12} -passin pass:${passphrase} -clcerts -nokeys -out ${_out}`;
+    logger('getPkcs12CertCmd', _cmd);
+    return {
+      filename: _out,
+      cmd: _cmd
+    };
+  }
+
+
+  /**
+   * getPkcs12KeyCmd - Creates the command needed to generate a key.pem
+   *
+   * @param  {String} p12           path to the .p12 cert
+   * @param  {String} passphrase    passphrase for .p12 key
+   * @return {Object} cmd           the command and filename
+   */
   getPkcs12KeyCmd(p12, passphrase) {
     let _path = path.parse(p12);
     _path.ext = '.pem';
     _path.name += '-key';
     p12 = path.resolve(p12);
-
     logger('getPkcs12KeyCmd', p12);
-
-
     let _out = p12.replace('.p12', '-key.pem');
     let _cmd =
       `openssl pkcs12 -in ${p12} -nocerts -passout pass:${passphrase} -passin pass:${passphrase} -out ${_out}`;
@@ -185,7 +179,8 @@ class Utils {
         this.exec(cert.cmd)
       ]).then((res) => {
         resolve({
-          key, cert
+          key,
+          cert
         });
       }).catch(reject);
 
@@ -196,7 +191,7 @@ class Utils {
   /**
    * validatePkpass - Validate the contents of a .pkpass package.
    *
-   * @param  {String} pkpassFilename The path to the .pkpass
+   * @param  {String} pkpassFilename The path to the .pkpass package
    * @return {String}                description
    */
   validatePkpass(pkpassFilename) {
@@ -224,34 +219,38 @@ class Utils {
     });
   }
 
+
+  /**
+   * generateJsonManifest - Creates a .json manifest of the .raw package files.
+   *
+   * @param  {String} rawpassFilename The path to the .raw package
+   * @return {String} manifest
+   */
   generateJsonManifest(rawpassFilename) {
     return new Promise((resolve, reject) => {
       let _manifest = {};
       let _manifestFilename = path.resolve(rawpassFilename, './manifest.json');
       let _filename, _checksum;
-
-      logger('generate_json_manifest', _manifestFilename);
-
+      logger('generateJsonManifest', _manifestFilename);
       fs.removeSync(path.resolve(rawpassFilename, './.DS_Store'));
       glob(`${rawpassFilename}/**/*.*`, (err, files) => {
         if (err) {
           reject(err);
         }
-
         if (files && files.length) {
           files.forEach((file) => {
             logger('Check if file is in manifest', file);
             _filename = file.replace(rawpassFilename + path.sep, '');
             _checksum = this.checksum(fs.readFileSync(file), 'sha1');
             _manifest[_filename] = _checksum;
-
             logger('checksum', _filename);
           });
+
           fs.writeFile(_manifestFilename, JSON.stringify(_manifest), (err) => {
             if (err) {
               reject(err);
             }
-            logger('generate_json_manifest', 'complete');
+            logger('generateJsonManifest', 'complete');
             resolve(_manifestFilename);
           });
         }
@@ -259,13 +258,22 @@ class Utils {
     });
   }
 
+
+  /**
+   * signJsonManifest - Sign the manifest.json file with signing certificate and key.
+   *
+   * @param  {String} rawpassFilename The path to .raw package
+   * @param  {String} cert            The path to the cert
+   * @param  {String} key             The path to the key
+   * @param  {String} passphrase      The key passphrase
+   * @return {String}               The path of the signature
+   */
   signJsonManifest(rawpassFilename, cert, key, passphrase) {
     return new Promise((resolve, reject) => {
       let wwdr = path.resolve(__dirname, './certificates/wwdr-authority.pem');
       let manifest = path.resolve(rawpassFilename, './manifest.json');
-      let signedContents;
       let signature = path.resolve(rawpassFilename, './signature');
-      logger('sign_manifest', signature);
+      logger('signJsonManifest', signature);
       let cmd =
         `openssl smime -binary \
   				-sign \
@@ -277,12 +285,11 @@ class Utils {
   				-outform DER \
   				-passin pass:${passphrase}`;
 
-      //logger('sign_manifest', sign_pass_cmd);
       this.exec(cmd).then((res) => {
-        logger('sign_manifest', res);
+        logger('signJsonManifest', res);
         resolve(signature);
       }).catch((error) => {
-        log.error('sign_manifest', error);
+        log.error('signJsonManifest', error);
         reject(error);
       });
     });

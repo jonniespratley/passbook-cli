@@ -25,21 +25,51 @@ $ passbook-cli --help
 ## CLI
 
 
+Create pem certificate and key for signing a .raw package.
+
+```
+$ passbook create-pems \
+	--input=./src/certificates/pass.io.passbookmanager.test.p12 \
+	--output=./temp \
+	--passphrase=test
 ```
 
- 645  passbook-cli create-pems --input=./src/certificates/pass.io.passbookmanager.test.p12 --passphrase=test --output=./temp
- 690  passbook-cli create-pass --type=coupon --output=./temp/pass.raw
+Create .pkpass package from a .raw package.
+
+```
+$ passbook create-pass \
+	--name=test-pass \
+	--type=coupon \
+	--output=./temp
+```
+
+```
+$ passbook
+
+Commands:
+
+    create-pass [options]  Create a .raw pass package from pass type templates.
+    create-pems [options]  Create the required certkmifcate and key from a .p12
+    config [key] [value]   Get and set options
+
+  Options:
+
+    -h, --help     output usage information
+    -d, --debug    enable debugger
+    -V, --version  output the version number
+
+  Examples:
+
+    $ custom-help --help
+    $ custom-help -h
+
+$ passbook create-pems --input ./src/certificates/pass.io.passbookmanager.test.p12 --passphrase test --output ./tmp
 ```
 
 
 
 
 
-
-
-
-
-## eventTicket
 ```
 
 export PASS_TYPE_IDENTIFIER=pass.io.passbookmanager.test
@@ -47,12 +77,11 @@ export PASS_TYPE_IDENTIFIER=pass.io.passbookmanager.test
 ```
 
 
+
 ## License
-
 Copyright (c) 2016 Jonnie Spratley
-
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
 
-## Acknowledgments
 
+## Acknowledgments
 Built using [generator-commader](https://github.com/Hypercubed/generator-commander).

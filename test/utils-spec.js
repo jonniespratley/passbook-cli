@@ -98,7 +98,7 @@ describe('Utils', () => {
         type: 'generic',
         teamIdentifier: '12345',
         passTypeIdentifier: 'pass.io.test',
-        dest: tempDir
+        output: tempDir
       }).then((resp) => {
         let pass = JSON.parse(fs.readFileSync(`${resp}/pass.json`));
         rawpassFilename = resp;
