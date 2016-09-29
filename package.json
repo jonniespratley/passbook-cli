@@ -2,6 +2,7 @@
   "name": "passbook-cli",
   "version": "0.0.1",
   "description": "A command line tool that simplifies the process of creating certificates, signing .raw packages and validating .pkpass packages for Apple Wallet.",
+  "main": "src/utils.js",
   "bin": {
     "passbook": "./bin/passbook-cli"
   },
@@ -22,6 +23,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "autocmdr": "~0.0.7",
+    "chance": "^1.0.4",
     "commander": "~2.0.0",
     "debug": "^2.2.0",
     "fs-extra": "^0.30.0",
