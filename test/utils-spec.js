@@ -8,7 +8,8 @@ const utils = require('../src/utils');
 const tempDir = path.resolve(__dirname, './temp');
 const pem = require('pem');
 const config = require('./test-config');
-
+const Chance = require('chance');
+const chance = new Chance();
 var rawpassFilename;
 describe('Utils', () => {
   it('getLogger - returns log instance', (done) => {
@@ -166,11 +167,16 @@ describe('Utils', () => {
 
       passTypes.forEach((type) => {
         it(`should create pass for ${type}`, (done) => {
+          let serial = chance.guid();
           var options = {
             name: `test-${type}`,
             type: type,
+            webServiceURL: config.webServiceURL,
             teamIdentifier: config.teamIdentifier,
+            serialNumber: serial,
+            authenticationToken: chance.apple_token(),
             passTypeIdentifier: config.passTypeIdentifier,
+            _id: String(config.passTypeIdentifier + '-' + serial).replace(/\W/g, '-'),
             output: path.resolve(__dirname, './temp')
           };
           utils.createPassAssets(options).then((resp) => {

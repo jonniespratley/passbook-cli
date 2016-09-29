@@ -1,33 +1,43 @@
+'use strict';
+const path = require('path');
+const glob = require('glob');
 const fs = require('fs-extra');
-const async = require('async');
-async.auto({
-  get_data: function(callback) {
-    console.log('in get_data');
-    // async code to get some data
-    callback(null, 'data', 'converted to array');
-  },
-  make_folder: function(callback) {
-    console.log('in make_folder');
-    // async code to create a directory to store a file in
-    // this is run at the same time as getting the data
-    callback(null, 'folder');
-  },
-  write_file: ['get_data', 'make_folder', function(results, callback) {
-    console.log('in write_file', JSON.stringify(results));
-    // once there is some data and the directory exists,
-    // write the data to a file in the directory
-    callback(null, 'filename');
-  }],
-  email_link: ['write_file', function(results, callback) {
-    console.log('in email_link', JSON.stringify(results));
-    // once the file is written let's email a link to it...
-    // results.write_file contains the filename returned by write_file.
-    callback(null, {
-      'file': results.write_file,
-      'email': 'user@example.com'
+const Chance = require('chance');
+const chance = new Chance();
+const config = require('./test-config');
+const request = require('request');
+request.debug = true;
+const BASE_URL = 'http://localhost:4987/passbook-server';
+var sendDoc = (doc) =>{
+  return new Promise((resolve, reject) =>{
+    request({
+      url: `${BASE_URL}/${doc._id}`,
+      json: true,
+      body: doc,
+      method: 'PUT'
+    }, (err, resp, body)=>{
+      if(err){
+        reject(err);
+      }
+      resolve(body);
     });
-  }]
-}, function(err, results) {
-  console.log('err = ', err);
-  console.log('results = ', results);
+  });
+}
+
+glob(path.resolve(__dirname, './temp/**/pass.json'), (err, files)=>{
+  files.forEach((file) =>{
+    let doc = fs.readJsonSync(file);
+    doc.authenticationToken = chance.apple_token();
+    doc.serialNumber = chance.apple_token();
+    doc.webServiceURL = config.webServiceURL;
+    doc._id = String(doc.passTypeIdentifier + '-' + doc.serialNumber).replace(/\W/g, '-');
+
+    sendDoc(doc).then((resp) =>{
+      console.log('send', resp);
+      fs.outputJsonSync(file, doc);
+
+      console.log('send file', doc._id, file);
+    });
+
+  });
 });
