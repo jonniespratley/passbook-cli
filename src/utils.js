@@ -79,6 +79,7 @@ class Utils {
    * @return {String} path The path of the output
    */
   createPassAssets(obj) {
+    logger('createPassAssets');
     return new Promise((resolve, reject) => {
       let name = obj.name;
       let passType = obj.type;
@@ -91,6 +92,11 @@ class Utils {
       let teamIdentifier = obj.teamIdentifier || process.env.TEAM_IDENTIFIER;
       var passJson = fs.readJsonSync(`${templatesDir}/pass.json`);
       passObj = Object.assign(passJson, passObj);
+
+      //log.info('pass.json', passJson);
+      logger('from', templatesDir);
+      logger('to', destDir);
+
       if (passTypeIdentifier) {
         logger('using', passTypeIdentifier);
         passObj.passTypeIdentifier = passTypeIdentifier;
@@ -100,9 +106,6 @@ class Utils {
         passObj.teamIdentifier = teamIdentifier;
       }
 
-      //log.info('pass.json', passJson);
-      logger('createPassAssets', 'from', templatesDir);
-      logger('createPassAssets', 'to', destDir);
       try {
         fs.ensureDirSync(destDir);
         fs.copySync(templatesDir, destDir);
@@ -163,6 +166,7 @@ class Utils {
   }
 
   forceCleanRawPass(rawpassFilename) {
+      logger('forceCleanRawPass', rawpassFilename);
       return new Promise((resolve, reject) => {
         let manifest = path.resolve(rawpassFilename, './manifest.json');
         let signature = path.resolve(rawpassFilename, './signature');
@@ -174,8 +178,8 @@ class Utils {
           resolve(rawpassFilename);
         });
         _.forEach(files, (file) => {
-          logger('force_clean_raw_pass', 'removing', path.basename(file));
           fs.removeSync(file);
+          logger('removed', path.basename(file));
           _done();
 
         });
@@ -259,11 +263,11 @@ class Utils {
         }
         if (files && files.length) {
           files.forEach((file) => {
-            logger('Check if file is in manifest', file);
+            //  logger('Check if file is in manifest', file);
             _filename = file.replace(rawpassFilename + path.sep, '');
             _checksum = this.checksum(fs.readFileSync(file), 'sha1');
             _manifest[_filename] = _checksum;
-            logger('checksum', _filename);
+            logger(_filename, _checksum);
           });
 
           fs.writeFile(_manifestFilename, JSON.stringify(_manifest), (err) => {
@@ -337,8 +341,11 @@ class Utils {
             base64: false,
             compression: 'DEFLATE'
           });
+
+          logger('zip', path.basename(zipFilename));
+
           fs.writeFileSync(zipFilename, data, 'binary');
-          logger('compressRawDirectory', path.basename(zipFilename));
+
           resolve(zipFilename);
         });
 
