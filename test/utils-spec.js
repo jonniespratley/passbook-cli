@@ -115,7 +115,8 @@ describe('Utils', () => {
       });
     });
 
-    it('generateJsonManifest - should generate a manifest.json of the .raw package and resolve on success', (done) => {
+    it('generateJsonManifest - should generate a manifest.json of the .raw package and resolve on success', (
+      done) => {
       utils.generateJsonManifest(rawpassFilename).then((resp) => {
         assert(resp);
         done();
@@ -147,15 +148,18 @@ describe('Utils', () => {
       });
     });
 
-    it('createPkPass - should generateJsonManifest, signJsonManifest, and compressRawDirectory for each pass type', (done) => {
-      utils.createPkPass(rawpassFilename, config.certs.cert.filename, config.certs.key.filename, config.certs.passphrase).then((resp) => {
-        assert(resp);
-        done();
-      }).catch((err) => {
-        assert.fail(err);
-        done();
+    it(
+      'createPkPass - should generateJsonManifest, signJsonManifest, and compressRawDirectory for each pass type', (
+        done) => {
+        utils.createPkPass(rawpassFilename, config.certs.cert.filename, config.certs.key.filename, config.certs
+          .passphrase).then((resp) => {
+          assert(resp);
+          done();
+        }).catch((err) => {
+          assert.fail(err);
+          done();
+        });
       });
-    });
 
 
     it('validatePkpass - should validate a .pkpass package and resolve on success', (done) => {
@@ -163,9 +167,12 @@ describe('Utils', () => {
     });
 
     context('Types', () => {
-      var passTypes = ['coupon', 'generic', 'eventTicket', 'storeCard'/*, 'boardingPass'*/];
+      var passTypes = ['coupon', 'generic', 'eventTicket', 'storeCard' /*, 'boardingPass'*/ ];
+      var pkpasses = [];
+
 
       passTypes.forEach((type) => {
+
         it(`should create pass for ${type}`, (done) => {
           let serial = chance.guid();
           var options = {
@@ -182,8 +189,11 @@ describe('Utils', () => {
           utils.createPassAssets(options).then((resp) => {
               console.log(resp);
               assert(fs.existsSync(resp));
-              utils.createPkPass(resp, config.certs.cert.filename, config.certs.key.filename, config.certs.passphrase).then((pkpass) => {
-                 console.log(pkpass);
+
+              utils.createPkPass(resp, config.certs.cert.filename, config.certs.key.filename,
+                config.certs.passphrase).then((pkpass) => {
+                console.log(pkpass);
+                pkpasses.push(pkpass);
                 assert(fs.existsSync(pkpass));
                 done();
               }).catch((err) => {
@@ -192,9 +202,35 @@ describe('Utils', () => {
               });
             })
             .catch((err) => {
-              assert.fail(err);
-              done();
+
+              done(err);
             });
+        });
+
+      });
+
+
+      it(`should create valid passes`, (done) => {
+        let _done = _.after(pkpasses.length, () => {
+          done();
+        });
+        _.forEach(pkpasses, (pkpass) => {
+          utils.validatePkpass(pkpass).then((resp) => {
+            assert(resp);
+            _done();
+          }).catch((err) => {
+            done(err);
+          });
+        });
+      });
+
+      it('should reject invalid pass', (done) => {
+        utils.validatePkpass('./temp/pass.raw').then((resp) => {
+          assert(!resp);
+          done();
+        }).catch((err) => {
+          assert(err);
+          done();
         });
       });
     });
