@@ -230,6 +230,7 @@ class Utils {
         }
       }).then((resp) => {
         logger('resp', resp);
+
         if (regex.test(resp.stdout)) {
           logger('err', resp);
           reject(new Error(resp.stdout));
