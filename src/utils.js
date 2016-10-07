@@ -6,10 +6,7 @@ const crypto = require('crypto');
 const debug = require('debug');
 const fs = require('fs-extra');
 const glob = require('glob');
-const request = require('request');
-
 const path = require('path');
-
 const pkg = require(path.resolve(__dirname, '../package.json'));
 const log = require('npmlog');
 const logger = debug(`${pkg.name}:utils`);
