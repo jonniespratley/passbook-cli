@@ -178,10 +178,13 @@ class Utils {
           resolve(rawpassFilename);
         });
         _.forEach(files, (file) => {
-          fs.removeSync(file);
-          logger('removed', path.basename(file));
-          _done();
-
+          fs.remove(file, (err) => {
+            if (err) {
+              reject(err);
+            }
+            logger('removed', path.basename(file));
+            _done();
+          });
         });
       });
     }
@@ -223,13 +226,26 @@ class Utils {
     let bin = path.resolve(__dirname, './bin/signpass');
     let regex = /(FAILED)/gmi;
     logger('validate', pkpassFilename);
+
+
     return new Promise((resolve, reject) => {
+
+      //Rename .pkpass to .zip
+
+      //Read .zip
+
+      //Get manifest.json
+
+      //Validate each file in manifest with file in .zip
+
+
       shell(`${bin} -v ${pkpassFilename}`, {
         captureOutput: (buf) => {
           return buf.toString();
         }
       }).then((resp) => {
         logger('resp', resp);
+
         if (regex.test(resp.stdout)) {
           logger('err', resp);
           reject(new Error(resp.stdout));
@@ -374,42 +390,42 @@ class Utils {
     return new Promise((resolve, reject) => {
       let pkpassFilename = rawpassFilename.replace('.raw', '.pkpass');
 
+
       /*
-              async.waterfall([
+            async.waterfall([
 
-                      clean(cb) =>{
-                          log.info('clean');
-                          this.forceCleanRawPass(rawpassFilename).then((a) =>{
-                              cb(null, a);
-                          });
-                      },
-                      manifest(dir, cb) =>{
-                          log.info('manifest');
-                          this.generateJsonManifest(dir).then((b) =>{
-                              cb(null, b);
-                          });
-                      },
-                      signature(dir, cb) =>{
-                          log.info('signature');
-                          this.signJsonManifest(dir, cert, key, passphrase).then((signature) =>{
-                              cb(null, signature);
-                          });
-                      },
-                      compress (dir, cb) =>{
-                          log.info('compress');
-                          this.compressRawDirectory(dir).then((zipFilename)=>{
-                              cb(null, zipFilename);
-                          }).catch(reject);
-                      }
+              (cb) => {
+                log.info('clean');
+                this.forceCleanRawPass(rawpassFilename).then((a) => {
+                  cb(null, rawpassFilename);
+                });
+              }, (dir, cb) => {
+                log.info('manifest');
+                this.generateJsonManifest(dir).then((b) => {
+                  cb(null, fs.dirname(b));
+                });
+              }, (dir, cb) => {
+                log.info('signature');
+                this.signJsonManifest(dir, cert, key, passphrase).then((signature) => {
+                  cb(null, fs.dirname(signature));
+                });
+              }, (dir, cb) => {
+                log.info('compress');
+                this.compressRawDirectory(dir).then((zipFilename) => {
+                  cb(null, zipFilename);
+                }).catch(reject);
+              }
 
-              ], (err, results) =>{
-                  console.log(err, results);
-                  if(err){
-                      reject(err);
-                  }
-                  resolve(results);
-              });
-      */
+            ], (err, results) => {
+              console.log(err, results);
+              if (err) {
+                reject(err);
+              }
+              resolve(results);
+            });*/
+
+      /**/
+
       this.forceCleanRawPass(rawpassFilename).then((a) => {
 
 
@@ -425,7 +441,9 @@ class Utils {
             }).catch(reject);
           }).catch(reject);
         }).catch(reject);
+
       });
+
     });
   }
 }
