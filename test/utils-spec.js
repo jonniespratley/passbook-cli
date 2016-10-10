@@ -83,7 +83,7 @@ describe('Utils', () => {
       utils.createPassAssets({
         name: 'test-pass-1',
         type: 'generic',
-        output: './temp'
+        output: config.dataPath
       }).then((resp) => {
         assert(resp);
         done();
@@ -99,7 +99,7 @@ describe('Utils', () => {
         type: 'generic',
         teamIdentifier: config.teamIdentifier,
         passTypeIdentifier: config.passTypeIdentifier,
-        output: './temp'
+        output: config.dataPath
       }).then((resp) => {
         let pass = JSON.parse(fs.readFileSync(`${resp}/pass.json`));
         rawpassFilename = resp;
@@ -184,7 +184,7 @@ describe('Utils', () => {
             authenticationToken: chance.apple_token(),
             passTypeIdentifier: config.passTypeIdentifier,
             _id: String(config.passTypeIdentifier + '-' + serial).replace(/\W/g, '-'),
-            output: path.resolve(__dirname, './temp')
+            output: config.dataPath
           };
           utils.createPassAssets(options).then((resp) => {
               console.log(resp);
@@ -225,7 +225,7 @@ describe('Utils', () => {
       });
 
       it('should reject invalid pass', (done) => {
-        utils.validatePkpass('./temp/pass.raw').then((resp) => {
+        utils.validatePkpass(config.dataPath + '/pass.raw').then((resp) => {
           assert(!resp);
           done();
         }).catch((err) => {

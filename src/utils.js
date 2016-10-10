@@ -162,37 +162,16 @@ class Utils {
     };
   }
 
-  forceCleanRawPass(rawpassFilename) {
-      logger('forceCleanRawPass', rawpassFilename);
-      return new Promise((resolve, reject) => {
-        let manifest = path.resolve(rawpassFilename, './manifest.json');
-        let signature = path.resolve(rawpassFilename, './signature');
-        let files = [
-          manifest,
-          signature
-        ];
-        let _done = _.after(files.length, () => {
-          resolve(rawpassFilename);
-        });
-        _.forEach(files, (file) => {
-          fs.remove(file, (err) => {
-            if (err) {
-              reject(err);
-            }
-            logger('removed', path.basename(file));
-            _done();
-          });
-        });
-      });
-    }
-    /**
-     * createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
-     *
-     * @param  {type} p12        The path to the .p12 cert
-     * @param  {type} passphrase The passphrase for the cert
-     * @param  {type} dest       The output destination (default is .p12 dir)
-     * @return {type}            description
-     */
+
+
+  /**
+   * createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
+   *
+   * @param  {type} p12        The path to the .p12 cert
+   * @param  {type} passphrase The passphrase for the cert
+   * @param  {type} dest       The output destination (default is .p12 dir)
+   * @return {type}            description
+   */
   createPemFiles(p12, passphrase) {
 
     return new Promise((resolve, reject) => {
@@ -211,6 +190,35 @@ class Utils {
     });
   }
 
+  /**
+   * forceCleanRawPass - I force clean a raw pass package.
+   *
+   * @param  {type} rawpassFilename description
+   * @return {type}                 description
+   */
+  forceCleanRawPass(rawpassFilename) {
+    logger('forceCleanRawPass', rawpassFilename);
+    return new Promise((resolve, reject) => {
+      let manifest = path.resolve(rawpassFilename, './manifest.json');
+      let signature = path.resolve(rawpassFilename, './signature');
+      let files = [
+        manifest,
+        signature
+      ];
+      let _done = _.after(files.length, () => {
+        resolve(rawpassFilename);
+      });
+      _.forEach(files, (file) => {
+        fs.remove(file, (err) => {
+          if (err) {
+            reject(err);
+          }
+          logger('removed', path.basename(file));
+          _done();
+        });
+      });
+    });
+  }
 
   /**
    * validatePkpass - Validate the contents of a .pkpass package.
@@ -386,46 +394,7 @@ class Utils {
   createPkPass(rawpassFilename, cert, key, passphrase) {
     return new Promise((resolve, reject) => {
       let pkpassFilename = rawpassFilename.replace('.raw', '.pkpass');
-
-
-      /*
-            async.waterfall([
-
-              (cb) => {
-                log.info('clean');
-                this.forceCleanRawPass(rawpassFilename).then((a) => {
-                  cb(null, rawpassFilename);
-                });
-              }, (dir, cb) => {
-                log.info('manifest');
-                this.generateJsonManifest(dir).then((b) => {
-                  cb(null, fs.dirname(b));
-                });
-              }, (dir, cb) => {
-                log.info('signature');
-                this.signJsonManifest(dir, cert, key, passphrase).then((signature) => {
-                  cb(null, fs.dirname(signature));
-                });
-              }, (dir, cb) => {
-                log.info('compress');
-                this.compressRawDirectory(dir).then((zipFilename) => {
-                  cb(null, zipFilename);
-                }).catch(reject);
-              }
-
-            ], (err, results) => {
-              console.log(err, results);
-              if (err) {
-                reject(err);
-              }
-              resolve(results);
-            });*/
-
-      /**/
-
       this.forceCleanRawPass(rawpassFilename).then((a) => {
-
-
         this.generateJsonManifest(rawpassFilename).then((manifest) => {
           this.signJsonManifest(rawpassFilename, cert, key, passphrase).then((signature) => {
             this.compressRawDirectory(rawpassFilename).then((zipFilename) => {
@@ -438,9 +407,7 @@ class Utils {
             }).catch(reject);
           }).catch(reject);
         }).catch(reject);
-
-      });
-
+      }).catch(reject);
     });
   }
 }

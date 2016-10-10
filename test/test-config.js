@@ -15,7 +15,7 @@ const APPLE_PASS_TYPE_IDENTIFIER_P12 = process.env.APPLE_PASS_TYPE_IDENTIFIER_P1
   `../src/certificates/${APPLE_PASS_TYPE_IDENTIFIER}.p12`);
 
 module.exports = {
-  dataPath: path.resolve(__dirname, './temp'),
+  dataPath: path.resolve(__dirname, '../temp'),
   "version": "v1",
   "teamIdentifier": APPLE_TEAM_IDENTIFIER,
   "passTypeIdentifier": APPLE_PASS_TYPE_IDENTIFIER,
