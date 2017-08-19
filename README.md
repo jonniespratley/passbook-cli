@@ -3,29 +3,31 @@
 [![Build Status](https://travis-ci.org/jonniespratley/passbook-cli.svg?branch=master)](https://travis-ci.org/jonniespratley/passbook-cli)
 
 
+## Docs
+Visit the doclets site.
+
+
 
 
 ## Description
 
 A command line tool that simplifies the process of creating certificates, signing `.raw` packages and validating `.pkpass` packages for Apple Wallet.
 
-## Usage
-
+## Install
 To install passbook-cli from npm, run:
 
 ```
 $ npm install -g passbook-cli
 ```
 
+## Usage
+
 ```
 $ passbook-cli --help
 ```
 
-
-## CLI
-
-
-Create pem certificate and key for signing a .raw package.
+### 1. Create Certificates and Key
+Create `pem` certificate and `key` for signing a `.raw` pass package.
 
 ```
 $ passbook create-pems \
@@ -34,7 +36,8 @@ $ passbook create-pems \
 	--passphrase=test
 ```
 
-Create .pkpass package from a .raw package.
+### 2. Create `.pkpass`
+Create a `.pkpass` package from a `.raw` package.
 
 ```
 $ passbook create-pass \
@@ -43,9 +46,14 @@ $ passbook create-pass \
 	--output=./temp
 ```
 
-```
-$ passbook
+## Command available
 
+```
+$ passbook-cli
+$ passbook
+```
+
+```
 Commands:
 
     create-pass [options]  Create a .raw pass package from pass type templates.

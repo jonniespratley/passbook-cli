@@ -1,5 +1,6 @@
 'use strict';
-const gulp = require('gulp');
+//const gulp = require('gulp');
+var gulp = require('gulp-help')(require('gulp'));
 const mocha = require('gulp-spawn-mocha');
 const gulpSequence = require('gulp-sequence');
 
@@ -14,8 +15,9 @@ const config = {
 
 
 
+// TODO: Docs
 const jsdoc = require('gulp-jsdoc3');
-gulp.task('docs', function(cb) {
+gulp.task('docs', 'Builds documentation using JSDoc3', function(cb) {
   gulp.src(['README.md'].concat(config.src), {
       read: false
     })
@@ -23,14 +25,16 @@ gulp.task('docs', function(cb) {
 });
 
 
+// TODO: Coveralls
 const coveralls = require('gulp-coveralls');
-gulp.task('coveralls', function() {
+gulp.task('coveralls', 'Publishes coveralls report', function() {
   return gulp.src('./coverage/lcov.info')
     .pipe(coveralls());
 });
 
+// TODO: Code Coverage
 const istanbul = require('gulp-istanbul');
-gulp.task('pre-test', function() {
+gulp.task('pre-test', 'Runs code coverage', function() {
   return gulp.src(config.src)
     .pipe(istanbul({
       includeUntested: true,
@@ -38,7 +42,7 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', function() {
+gulp.task('test', 'Runs mocha unit tests', function() {
   return gulp.src(config.specs)
     .pipe(mocha({
       read: false,
@@ -54,9 +58,9 @@ gulp.task('test', function() {
     });
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', 'Watches sources changes and tests', function() {
   gulp.watch([config.src, 'test/**/*.js'], ['test']);
 });
 
 
-gulp.task('default', gulpSequence('test', 'docs', 'coveralls'));
+gulp.task('default', 'build, test, docs and coverals', gulpSequence('test', 'docs', 'coveralls'));
