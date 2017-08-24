@@ -125,16 +125,6 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-"autocmdr@git+https://github.com/jonniespratley/autocmdr.git":
-  version "0.0.9"
-  resolved "git+https://github.com/jonniespratley/autocmdr.git#04262350f7fbe959ee0ef6817da213c39d28343d"
-  dependencies:
-    commander "^2.9.0"
-    commander-tabtab "~0.1.0"
-    didyoumean "~1.2.0"
-    nconf "~0.8.0"
-    winston "~2.3.0"
-
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -451,13 +441,9 @@ didyoumean@~1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.1.tgz#e92edfdada6537d484d73c0172fd1eba0c4976ff"
 
-diff@3.2.0:
+diff@3.2.0, diff@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
-
-diff@^3.0.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-3.3.0.tgz#056695150d7aa93237ca7e378ac3b1682b7963b9"
 
 dom-serializer@0:
   version "0.1.0"
@@ -1349,6 +1335,16 @@ istanbul@^0.4.0, istanbul@~0.4.5:
     supports-color "^3.1.0"
     which "^1.1.1"
     wordwrap "^1.0.0"
+
+jps-autocmdr@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/jps-autocmdr/-/jps-autocmdr-0.0.9.tgz#b960809b0f798322c2cdbb1614fb178ce1a18456"
+  dependencies:
+    commander "^2.9.0"
+    commander-tabtab "~0.1.0"
+    didyoumean "~1.2.0"
+    nconf "~0.8.0"
+    winston "~2.3.0"
 
 js-tokens@^3.0.0:
   version "3.0.2"

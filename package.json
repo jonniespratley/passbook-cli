@@ -1,6 +1,6 @@
 {
   "name": "passbook-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A command line tool that simplifies the process of creating certificates, signing .raw packages and validating .pkpass packages for Apple Wallet.",
   "main": "src/utils.js",
   "bin": {
@@ -26,10 +26,10 @@
   "bugs": "https://github.com/jonniespratley/passbook-cli/issues",
   "dependencies": {
     "async": "^2.5.0",
-    "autocmdr": "git+https://github.com/jonniespratley/autocmdr.git",
     "chance": "^1.0.10",
     "commander": "^2.11.0",
     "glob": "^7.1.2",
+    "jps-autocmdr": "0.0.9",
     "js-yaml": "^3.9.1",
     "lodash": "^4.17.4",
     "node-zip": "^1.1.1",
