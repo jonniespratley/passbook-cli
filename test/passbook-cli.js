@@ -12,7 +12,7 @@ var passTypes = ['coupon', 'generic', 'eventTicket', 'boardingPass', 'storeCard'
 var output = path.resolve(__dirname, './temp/passes');
 
 
-describe('passbook-cli bin', function () {
+xdescribe('passbook-cli bin', function () {
   var cmd = 'node ' + path.join(__dirname, '../bin/passbook-cli') + ' ';
 
   it('--help should run without errors', function (done) {

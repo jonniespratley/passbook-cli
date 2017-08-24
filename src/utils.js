@@ -21,17 +21,17 @@ const shell = require('pshell').context({
 
 /**
  * @class Utils
- * @module utils
+ * @module passbook.utils
  * @description Utility methods used by passbook-cli.
  */
 class Utils {
   constructor() {}
 
   /**
-   * exec - description
+   * exec - Execute a shell command and return a promise
    *
-   * @param  {type} cmd     description
-   * @param  {type} options description
+   * @param  {type} cmd     The command to execute
+   * @param  {type} options The options to pass (https://www.npmjs.com/package/pshell)
    * @return {type}         description
    */
   exec(cmd, options) {
@@ -165,8 +165,19 @@ class Utils {
 
 
   /**
-   * createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
+   * @description createPemFiles - Creates the required key/cert for signing a .raw package into a .pkpass
    *
+   * @example
+   * var config = {};
+   * utils.createPemFiles(config.certs.p12, config.certs.passphrase, tempDir).then((res) => {
+       config.certs.cert = res.cert;
+       config.certs.key = res.key;
+       assert(res);
+       done();
+     }).catch((err) => {
+       done(err);
+     });
+
    * @param  {type} p12        The path to the .p12 cert
    * @param  {type} passphrase The passphrase for the cert
    * @param  {type} dest       The output destination (default is .p12 dir)

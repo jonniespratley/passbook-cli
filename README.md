@@ -26,7 +26,7 @@ $ npm install -g passbook-cli
 $ passbook-cli --help
 ```
 
-### 1. Create Certificates and Key
+### 1. Create PEM Files
 Create `pem` certificate and `key` for signing a `.raw` pass package.
 
 ```
@@ -36,7 +36,7 @@ $ passbook create-pems \
 	--passphrase=test
 ```
 
-### 2. Create `.pkpass`
+### 2. Create `.pkpass` package
 Create a `.pkpass` package from a `.raw` package.
 
 ```
@@ -76,12 +76,11 @@ $ passbook create-pems --input ./src/certificates/pass.io.passbookmanager.test.p
 
 
 
-
+## Environment Variables
 
 ```
-
-export PASS_TYPE_IDENTIFIER=pass.io.passbookmanager.test
- 718  export TEAM_IDENTIFIER=USE9YUYDFH
+$ export PASS_TYPE_IDENTIFIER=XXX
+$ export TEAM_IDENTIFIER=XXX
 ```
 
 

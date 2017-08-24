@@ -5,10 +5,10 @@ const mocha = require('gulp-spawn-mocha');
 const gulpSequence = require('gulp-sequence');
 
 
-
+const PKG = require('./package.json');
 const config = {
   src: [
-    'src/**/*.js'
+    'src/utils.js'
   ],
   specs: 'test/**/*-spec.js'
 };
@@ -18,7 +18,12 @@ const config = {
 // TODO: Docs
 const jsdoc = require('gulp-jsdoc3');
 gulp.task('docs', 'Builds documentation using JSDoc3', function(cb) {
-  gulp.src(['README.md'].concat(config.src), {
+  gulp.src([
+    'README.md',
+    'src/**/*.js',
+    PKG.main
+  ]
+  .concat(config.src), {
       read: false
     })
     .pipe(jsdoc(cb));
