@@ -12,3 +12,4 @@ temp
 docs
 mochaawesome-report
 mochaawesome-reports
+.nyc_output
